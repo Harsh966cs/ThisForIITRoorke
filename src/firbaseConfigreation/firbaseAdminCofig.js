@@ -1,14 +1,18 @@
-import { initializeApp } from 'firebase-admin/app';
+import dotenv from "dotenv";
+import admin from "firebase-admin";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDeBBDpT5r4iz3s5kz5MUjQgj3F5V8H1GI",
-    authDomain: "blogwebsite-8f73f.firebaseapp.com",
-    projectId: "blogwebsite-8f73f",
-    storageBucket: "blogwebsite-8f73f.appspot.com",
-    messagingSenderId: "763093824007",
-    appId: "1:763093824007:web:105d21cba90f3e0511b0a2",
-    measurementId: "G-C0JKW6PVFR"
-}
-const auth = initializeApp(firebaseConfig);
+dotenv.config();
 
-export default auth;
+admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  }),
+});
+
+export const auth = admin.auth();
+export const db = admin.firestore();
+export const storage = admin.storage();
+
+export default admin;
